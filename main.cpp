@@ -2,8 +2,8 @@
 Programa:       Juego de las 7 y media.
 Autor:          Víctor Rivas <vrivas@ujaen.es>
 Fecha:          07-Nov-2020
-Versión:        5
-Descripción:    Hacemos que los jugadores puedan jugar una partida.
+Versión:        6
+Descripción:    Almacenamos para cada jugador las cartas que le van saliendo.
 */
 
 #include <iostream>
@@ -28,13 +28,13 @@ int main() {
 
    // Baraja de cartas inicializada por el método de la "fuerza" bruta.
    Carta baraja[40] =  {
-        {'1',"Oros",1},{'2',"Oros",2},{'3',"Oros",3},{'4',"Oros",5},{'5',"Oros",1},
+        {'1',"Oros",1},{'2',"Oros",2},{'3',"Oros",3},{'4',"Oros",5},{'5',"Oros",5},
         {'6',"Oros",6},{'7',"Oros",7},{'J',"Oros",0.5},{'Q',"Oros",0.5},{'K',"Oros",0.5},
-        {'1',"Copas",1},{'2',"Copas",2},{'3',"Copas",3},{'4',"Copas",5},{'5',"Copas",1},
+        {'1',"Copas",1},{'2',"Copas",2},{'3',"Copas",3},{'4',"Copas",4},{'5',"Copas",5},
         {'6',"Copas",6},{'7',"Copas",7},{'J',"Copas",0.5},{'Q',"Copas",0.5},{'K',"Copas",0.5},
-        {'1',"Espadas",1},{'2',"Espadas",2},{'3',"Espadas",3},{'4',"Espadas",5},{'5',"Espadas",1},
+        {'1',"Espadas",1},{'2',"Espadas",2},{'3',"Espadas",3},{'4',"Espadas",4},{'5',"Espadas",5},
         {'6',"Espadas",6},{'7',"Espadas",7},{'J',"Espadas",0.5},{'Q',"Espadas",0.5},{'K',"Espadas",0.5},
-        {'1',"Bastos",1},{'2',"Bastos",2},{'3',"Bastos",3},{'4',"Bastos",5},{'5',"Bastos",1},
+        {'1',"Bastos",1},{'2',"Bastos",2},{'3',"Bastos",3},{'4',"Bastos",4},{'5',"Bastos",5},
         {'6',"Bastos",6},{'7',"Bastos",7},{'J',"Bastos",0.5},{'Q',"Bastos",0.5},{'K',"Bastos",0.5}
    }; // Fin de inicialización de la baraja
 
@@ -57,6 +57,12 @@ int main() {
 
         // Si es true, puede seguir jugando; si es false, no.
         bool sigue_jugando;
+
+        // Cartas que le van saliendo durante la partida
+        Carta mis_cartas[MAX_CARTAS];
+
+        // Número de cartas que le han salido
+        int num_cartas;
    };
 
    // Defino dos Playeres
@@ -70,11 +76,22 @@ int main() {
    int proxima_carta = 0;
 
    // Asigno primero una carta a cada uno
+   player1.mis_cartas[player1.num_cartas]=baraja[proxima_carta];
    player1.puntos+=baraja[proxima_carta].puntuacion;
-   ++proxima_carta;
-   player2.puntos+=baraja[proxima_carta].puntuacion;
+   cout << "La primera carta para " << player1.nombre << " es "
+        << baraja[proxima_carta].valor << "-" << baraja[proxima_carta].palo[0] << endl;
+   ++player1.num_cartas;
    ++proxima_carta;
 
+   player2.mis_cartas[player2.num_cartas]=baraja[proxima_carta];
+   player2.puntos+=baraja[proxima_carta].puntuacion;
+   cout << "La primera carta para " << player2.nombre << " es "
+        << baraja[proxima_carta].valor << "-" << baraja[proxima_carta].palo[0] << endl;
+   ++player2.num_cartas;
+   ++proxima_carta;
+
+
+    // Reparto cartas alternativamente a uno y a otro.
    do {
         char respuesta;
         // Si el jugador/a 1 puede seguir jugando, le pregunto si quiere más cartas.
@@ -84,9 +101,15 @@ int main() {
             cout << "  ¿Quieres otra carta? ";
             cin >> respuesta;
             if (respuesta=='S' || respuesta=='s') {
+                // Añado la carta que le ha salido
+                player1.mis_cartas[player1.num_cartas]=baraja[proxima_carta];
+                // Añado la puntuación de la carta
                 player1.puntos+=baraja[proxima_carta].puntuacion;
                 cout << "  Se te añade una carta con " << baraja[proxima_carta].puntuacion << " puntos; ahora tienes "
                     << player1.puntos << " puntos. " << endl;
+
+                // Actualizo contadores
+                ++player1.num_cartas;
                 ++proxima_carta;
             } else {
                 player1.sigue_jugando = false;
@@ -101,9 +124,15 @@ int main() {
             cout << "  ¿Quieres otra carta? ";
             cin >> respuesta;
             if (respuesta=='S' || respuesta=='s') {
+                // Añado la carta que le ha salido
+                player2.mis_cartas[player2.num_cartas]=baraja[proxima_carta];
+                // Añado la puntuación de la carta
                 player2.puntos+=baraja[proxima_carta].puntuacion;
                 cout << "  Se te añade una carta con " << baraja[proxima_carta].puntuacion << " puntos; ahora tienes "
                     << player2.puntos << " puntos. " << endl;
+
+                // Actualizo contadores
+                ++player2.num_cartas;
                 ++proxima_carta;
             } else {
                 player2.sigue_jugando = false;
@@ -114,9 +143,17 @@ int main() {
 
 
     // Imprimimos las puntuaciones
+    cout << endl << endl;
     cout << "Los jugadores han quedado así: " << endl << endl;
     cout << player1.nombre << " con " << player1.puntos << " puntos" << endl;
+    for ( int i=0; i<player1.num_cartas; ++i ) {
+        cout << "   " << player1.mis_cartas[i].valor << "-" << player1.mis_cartas[i].palo[0] << endl;
+    }
     cout << player2.nombre << " con " << player2.puntos << " puntos" << endl;
+    for ( int i=0; i<player2.num_cartas; ++i ) {
+        cout << "   " << player2.mis_cartas[i].valor << "-" << player2.mis_cartas[i].palo[0] << endl;
+    }
+
     cout << endl;
 
     return 0;
