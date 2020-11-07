@@ -1,1 +1,3 @@
-# fdp_juego_7_y_media
+# Fundamentos de la Programación: juego de las 7 y media
+
+Ejemplo de uso de structs y arrays.
