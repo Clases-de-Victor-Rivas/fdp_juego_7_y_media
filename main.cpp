@@ -2,8 +2,8 @@
 Programa:       Juego de las 7 y media.
 Autor:          Víctor Rivas <vrivas@ujaen.es>
 Fecha:          07-Nov-2020
-Versión:        3
-Descripción:    Barajo la carta: ejemplo de asignación de estructuras completas
+Versión:        4
+Descripción:    Creo dos jugadores, para que puedan jugar. En esta versión, solo guardo sus puntos; más adelante guardaré las cartas que le han salido.
 */
 
 #include <iostream>
@@ -38,8 +38,7 @@ int main() {
         {'6',"Bastos",6},{'7',"Bastos",7},{'J',"Bastos",0.5},{'Q',"Bastos",0.5},{'K',"Bastos",0.5}
    }; // Fin de inicialización de la baraja
 
-
-    // INtercambio cartas al azar. Se hace asignación de structs enteros.
+       // Intercambio cartas al azar. Se hace asignación de structs enteros.
     for( int i=0; i<MAX_CARTAS-10; ++i ) {
         int intercambiar_con = rand()%MAX_CARTAS;
         Carta aux = baraja[i];
@@ -47,13 +46,23 @@ int main() {
         baraja[intercambiar_con]=aux;
    }
 
-    // Comprobamos que funciona:
+   // Declaro el struct Player
+   // Aunque lo he puesto aquí, por seguir con la progresión en las versiones, en la siguiente versión irá al principio, con al declaración de todos los structs
+   struct Player {
+        string nombre;
+        double puntos;
+   };
 
-    // Deberían salir desordenadas
-    cout << "Orden de las cartas después de mezclar la baraja: " << endl;
-    for( int i=0; i<40; ++i ) {
-        cout << "Posición " << i<< ":\t" << baraja[i].valor << "-" <<baraja[i].palo[0]<<" ("<<baraja[i].puntuacion<<" ptos.)"<<endl;
-    }
+   // Defino dos Playeres
+   Player player1 = {"Ana", 0};
+   Player player2 = {"Benito", 0};
+
+
+
+    // Comprobamos que funciona:
+    cout << "Los jugadores son: " << endl;
+    cout << player1.nombre << " con " << player1.puntos << " puntos" << endl;
+    cout << player2.nombre << " con " << player2.puntos << " puntos" << endl;
     cout << endl;
 
     return 0;
