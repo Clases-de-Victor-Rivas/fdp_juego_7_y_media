@@ -2,8 +2,8 @@
 Programa:       Juego de las 7 y media.
 Autor:          Víctor Rivas <vrivas@ujaen.es>
 Fecha:          07-Nov-2020
-Versión:        4
-Descripción:    Creo dos jugadores, para que puedan jugar. En esta versión, solo guardo sus puntos; más adelante guardaré las cartas que le han salido.
+Versión:        5
+Descripción:    Hacemos que los jugadores puedan jugar una partida.
 */
 
 #include <iostream>
@@ -49,18 +49,72 @@ int main() {
    // Declaro el struct Player
    // Aunque lo he puesto aquí, por seguir con la progresión en las versiones, en la siguiente versión irá al principio, con al declaración de todos los structs
    struct Player {
+        // Nombre del jugador/a
         string nombre;
+
+        // Puntos que lleva en la partida por las cartas que le salen
         double puntos;
+
+        // Si es true, puede seguir jugando; si es false, no.
+        bool sigue_jugando;
    };
 
    // Defino dos Playeres
-   Player player1 = {"Ana", 0};
-   Player player2 = {"Benito", 0};
+   Player player1 = {"Ana", 0, true};
+   Player player2 = {"Benito", 0, true};
 
 
+   // Empieza la partida a partir de aquí
 
-    // Comprobamos que funciona:
-    cout << "Los jugadores son: " << endl;
+   // Proxima_carta indica la próxima carta a repartir
+   int proxima_carta = 0;
+
+   // Asigno primero una carta a cada uno
+   player1.puntos+=baraja[proxima_carta].puntuacion;
+   ++proxima_carta;
+   player2.puntos+=baraja[proxima_carta].puntuacion;
+   ++proxima_carta;
+
+   do {
+        char respuesta;
+        // Si el jugador/a 1 puede seguir jugando, le pregunto si quiere más cartas.
+        if( player1.sigue_jugando ) {
+            cout << endl
+                << player1.nombre << " tienes " << player1.puntos << " puntos. " << endl;
+            cout << "  ¿Quieres otra carta? ";
+            cin >> respuesta;
+            if (respuesta=='S' || respuesta=='s') {
+                player1.puntos+=baraja[proxima_carta].puntuacion;
+                cout << "  Se te añade una carta con " << baraja[proxima_carta].puntuacion << " puntos; ahora tienes "
+                    << player1.puntos << " puntos. " << endl;
+                ++proxima_carta;
+            } else {
+                player1.sigue_jugando = false;
+            }
+        }
+
+
+        // Si el jugador/a 2 puede seguir jugando, le pregunto si quiere más cartas.
+        if( player2.sigue_jugando ) {
+            cout << endl
+                << player2.nombre << " tienes " << player2.puntos << " puntos. " << endl;
+            cout << "  ¿Quieres otra carta? ";
+            cin >> respuesta;
+            if (respuesta=='S' || respuesta=='s') {
+                player2.puntos+=baraja[proxima_carta].puntuacion;
+                cout << "  Se te añade una carta con " << baraja[proxima_carta].puntuacion << " puntos; ahora tienes "
+                    << player2.puntos << " puntos. " << endl;
+                ++proxima_carta;
+            } else {
+                player2.sigue_jugando = false;
+            }
+        }
+
+   } while ( player1.sigue_jugando || player2.sigue_jugando );
+
+
+    // Imprimimos las puntuaciones
+    cout << "Los jugadores han quedado así: " << endl << endl;
     cout << player1.nombre << " con " << player1.puntos << " puntos" << endl;
     cout << player2.nombre << " con " << player2.puntos << " puntos" << endl;
     cout << endl;
